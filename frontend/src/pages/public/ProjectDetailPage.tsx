@@ -17,6 +17,7 @@ import { SafeMarkdown } from "../../components/common/SafeMarkdown";
 import { MotionReveal } from "../../components/common/MotionReveal";
 import { api } from "../../services/api";
 import { Project } from "../../types";
+import { fallbackProjects } from "../../utils/fallbackData";
 
 const GithubIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
@@ -39,7 +40,13 @@ export const ProjectDetailPage: React.FC = () => {
         setProject(data);
         window.scrollTo({ top: 0, behavior: "smooth" });
       } catch (err) {
-        setProject(null);
+        const fallbackMatch = fallbackProjects.find((p) => p.slug === slug);
+        if (fallbackMatch) {
+          setProject(fallbackMatch);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          setProject(null);
+        }
       } finally {
         setLoading(false);
       }

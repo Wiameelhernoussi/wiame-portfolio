@@ -18,16 +18,25 @@ import {
   Certificate,
   SiteSetting,
 } from "../../types";
+import {
+  fallbackProfile,
+  fallbackProjects,
+  fallbackExperiences,
+  fallbackEducation,
+  fallbackSkills,
+  fallbackCertificates,
+  fallbackSettings,
+} from "../../utils/fallbackData";
 
 export const HomePage: React.FC = () => {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [experiences, setExperiences] = useState<Experience[]>([]);
-  const [education, setEducation] = useState<Education[]>([]);
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
-  const [settings, setSettings] = useState<SiteSetting | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<Profile>(fallbackProfile);
+  const [projects, setProjects] = useState<Project[]>(fallbackProjects);
+  const [experiences, setExperiences] = useState<Experience[]>(fallbackExperiences);
+  const [education, setEducation] = useState<Education[]>(fallbackEducation);
+  const [skills, setSkills] = useState<Skill[]>(fallbackSkills);
+  const [certificates, setCertificates] = useState<Certificate[]>(fallbackCertificates);
+  const [settings, setSettings] = useState<SiteSetting>(fallbackSettings);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Record visit asynchronously (privacy-friendly, no cookies)
@@ -60,17 +69,15 @@ export const HomePage: React.FC = () => {
           api.get<SiteSetting>("/settings"),
         ]);
 
-        setProfile(profileRes.data);
-        setProjects(projectsRes.data);
-        setExperiences(expRes.data);
-        setEducation(eduRes.data);
-        setSkills(skillsRes.data);
-        setCertificates(certsRes.data);
-        setSettings(settingsRes.data);
+        if (profileRes.data) setProfile(profileRes.data);
+        if (projectsRes.data && projectsRes.data.length > 0) setProjects(projectsRes.data);
+        if (expRes.data && expRes.data.length > 0) setExperiences(expRes.data);
+        if (eduRes.data && eduRes.data.length > 0) setEducation(eduRes.data);
+        if (skillsRes.data && skillsRes.data.length > 0) setSkills(skillsRes.data);
+        if (certsRes.data && certsRes.data.length > 0) setCertificates(certsRes.data);
+        if (settingsRes.data) setSettings(settingsRes.data);
       } catch (err) {
-        console.error("Failed to load portfolio content from backend API:", err);
-      } finally {
-        setLoading(false);
+        console.warn("Using offline fallback data for portfolio:", err);
       }
     };
 

@@ -21,8 +21,8 @@ frontend/.env.*.local
 # Local SQLite Database & Uploads
 portfolio.db
 *.sqlite3
-uploads/
-!uploads/.gitkeep
+/uploads/
+!frontend/public/uploads/
 
 # Testing and Cache
 .pytest_cache/

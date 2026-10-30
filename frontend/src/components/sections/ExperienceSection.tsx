@@ -7,7 +7,8 @@ interface ExperienceSectionProps {
   experiences: Experience[];
 }
 
-export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences }) => {
+export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences = [] }) => {
+  const safeExperiences = Array.isArray(experiences) ? experiences : [];
   return (
     <section id="experience" className="py-24 border-t border-line-light/80 dark:border-line-dark/80 bg-surface-light/30 dark:bg-surface-dark/30">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -29,7 +30,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experience
 
         {/* Timeline nodes */}
         <div className="relative pl-6 sm:pl-8 border-l-2 border-line-light dark:border-line-dark space-y-12">
-          {experiences.map((exp, index) => (
+          {safeExperiences.map((exp, index) => (
             <MotionReveal key={exp.id} delay={index * 0.15}>
               <div className="relative group">
                 {/* Timeline node icon */}

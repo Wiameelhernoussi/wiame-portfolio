@@ -40,14 +40,12 @@ export const HomePage: React.FC = () => {
 
   useEffect(() => {
     // Record visit asynchronously (privacy-friendly, no cookies)
-    try {
-      api.post("/analytics/visit", {
-        path: window.location.pathname,
-        referrer: document.referrer,
-      });
-    } catch {
-      // Ignore analytics errors
-    }
+    api.post("/analytics/visit", {
+      path: window.location.pathname,
+      referrer: document.referrer,
+    }).catch(() => {
+      // Ignore analytics errors when offline or on static Vercel
+    });
 
     const loadContent = async () => {
       try {
@@ -69,13 +67,27 @@ export const HomePage: React.FC = () => {
           api.get<SiteSetting>("/settings"),
         ]);
 
-        if (profileRes.data) setProfile(profileRes.data);
-        if (projectsRes.data && projectsRes.data.length > 0) setProjects(projectsRes.data);
-        if (expRes.data && expRes.data.length > 0) setExperiences(expRes.data);
-        if (eduRes.data && eduRes.data.length > 0) setEducation(eduRes.data);
-        if (skillsRes.data && skillsRes.data.length > 0) setSkills(skillsRes.data);
-        if (certsRes.data && certsRes.data.length > 0) setCertificates(certsRes.data);
-        if (settingsRes.data) setSettings(settingsRes.data);
+        if (profileRes?.data && typeof profileRes.data === "object" && profileRes.data.full_name) {
+          setProfile(profileRes.data);
+        }
+        if (Array.isArray(projectsRes?.data) && projectsRes.data.length > 0) {
+          setProjects(projectsRes.data);
+        }
+        if (Array.isArray(expRes?.data) && expRes.data.length > 0) {
+          setExperiences(expRes.data);
+        }
+        if (Array.isArray(eduRes?.data) && eduRes.data.length > 0) {
+          setEducation(eduRes.data);
+        }
+        if (Array.isArray(skillsRes?.data) && skillsRes.data.length > 0) {
+          setSkills(skillsRes.data);
+        }
+        if (Array.isArray(certsRes?.data) && certsRes.data.length > 0) {
+          setCertificates(certsRes.data);
+        }
+        if (settingsRes?.data && typeof settingsRes.data === "object" && settingsRes.data.section_visibility) {
+          setSettings(settingsRes.data);
+        }
       } catch (err) {
         console.warn("Using offline fallback data for portfolio:", err);
       }

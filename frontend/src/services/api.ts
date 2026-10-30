@@ -35,7 +35,19 @@ const processQueue = (error: any, token: string | null = null) => {
 };
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // If backend is not connected and Vercel rewrote /api to index.html (SPA fallback)
+    const contentType = String(response.headers?.["content-type"] || "");
+    if (
+      typeof response.data === "string" &&
+      (response.data.trim().startsWith("<!doctype") ||
+        response.data.trim().startsWith("<html") ||
+        contentType.includes("text/html"))
+    ) {
+      return Promise.reject(new Error("API returned HTML instead of JSON."));
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 

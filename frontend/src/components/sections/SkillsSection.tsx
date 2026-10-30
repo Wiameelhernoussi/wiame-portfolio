@@ -7,7 +7,8 @@ interface SkillsSectionProps {
   skills: Skill[];
 }
 
-export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
+export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills = [] }) => {
+  const safeSkills = Array.isArray(skills) ? skills : [];
   // Group skills by category
   const categories = [
     { name: "AI & Machine Learning", icon: Brain, color: "text-majorelle dark:text-majorelle-dark" },
@@ -38,8 +39,8 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {categories.map((cat, catIdx) => {
             const Icon = cat.icon;
-            const categorySkills = skills.filter(
-              (s) => s.category.toLowerCase() === cat.name.toLowerCase()
+            const categorySkills = safeSkills.filter(
+              (s) => s?.category && s.category.toLowerCase() === cat.name.toLowerCase()
             );
 
             return (

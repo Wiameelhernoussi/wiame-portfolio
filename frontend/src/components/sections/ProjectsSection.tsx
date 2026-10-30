@@ -14,40 +14,42 @@ interface ProjectsSectionProps {
   projects: Project[];
 }
 
-export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
+export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects = [] }) => {
+  const safeProjects = Array.isArray(projects) ? projects : [];
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Extract unique categories
   const categories = useMemo(() => {
     const set = new Set<string>();
-    projects.forEach((p) => {
-      if (p.category) set.add(p.category);
+    safeProjects.forEach((p) => {
+      if (p?.category) set.add(p.category);
     });
     return ["All", ...Array.from(set)];
-  }, [projects]);
+  }, [safeProjects]);
 
   // Filter projects
   const filteredProjects = useMemo(() => {
-    return projects.filter((p) => {
+    return safeProjects.filter((p) => {
+      if (!p) return false;
       const matchCat =
         selectedCategory === "All" ||
-        p.category.toLowerCase().includes(selectedCategory.toLowerCase());
+        (p.category && p.category.toLowerCase().includes(selectedCategory.toLowerCase()));
       const query = searchTerm.toLowerCase().trim();
       const matchSearch =
         !query ||
-        p.title.toLowerCase().includes(query) ||
-        p.short_description.toLowerCase().includes(query) ||
-        (p.technologies || []).some((t) => t.toLowerCase().includes(query));
+        (p.title && p.title.toLowerCase().includes(query)) ||
+        (p.short_description && p.short_description.toLowerCase().includes(query)) ||
+        ((p.technologies || []).some((t) => t.toLowerCase().includes(query)));
 
       return matchCat && matchSearch;
     });
-  }, [projects, selectedCategory, searchTerm]);
+  }, [safeProjects, selectedCategory, searchTerm]);
 
   // Separate featured project from regular cards
   const featuredProject = useMemo(() => {
-    return projects.find((p) => p.is_featured) || projects[0];
-  }, [projects]);
+    return safeProjects.find((p) => p.is_featured) || safeProjects[0];
+  }, [safeProjects]);
 
   return (
     <section id="projects" className="py-24 border-t border-line-light/80 dark:border-line-dark/80">

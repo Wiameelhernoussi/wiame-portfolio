@@ -7,7 +7,8 @@ interface EducationSectionProps {
   education: Education[];
 }
 
-export const EducationSection: React.FC<EducationSectionProps> = ({ education }) => {
+export const EducationSection: React.FC<EducationSectionProps> = ({ education = [] }) => {
+  const safeEducation = Array.isArray(education) ? education : [];
   return (
     <section id="education" className="py-24 border-t border-line-light/80 dark:border-line-dark/80">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -28,7 +29,7 @@ export const EducationSection: React.FC<EducationSectionProps> = ({ education })
         </MotionReveal>
 
         <div className="relative pl-6 sm:pl-8 border-l-2 border-line-light dark:border-line-dark space-y-10">
-          {education.map((edu, index) => (
+          {safeEducation.map((edu, index) => (
             <MotionReveal key={edu.id} delay={index * 0.15}>
               <div className="relative group">
                 <div className="absolute -left-[35px] sm:-left-[43px] top-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-saffron dark:bg-saffron-dark text-slate-900 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform font-bold">

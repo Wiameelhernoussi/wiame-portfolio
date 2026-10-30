@@ -7,11 +7,12 @@ interface CertificatesSectionProps {
   certificates: Certificate[];
 }
 
-export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ certificates }) => {
+export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ certificates = [] }) => {
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
 
+  const safeCerts = Array.isArray(certificates) ? certificates : [];
   // Only display visible certificates on the public site
-  const visibleCertificates = certificates.filter((c) => c.is_visible);
+  const visibleCertificates = safeCerts.filter((c) => c?.is_visible);
 
   if (visibleCertificates.length === 0) {
     return null; // Cleanly hide on public site per instructions until Wiame uploads certificates in admin

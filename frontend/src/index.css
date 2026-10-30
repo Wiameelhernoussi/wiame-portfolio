@@ -1,0 +1,75 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+:root {
+  --bg: #F5F6FB;
+  --surface: #FFFFFF;
+  --ink: #16193A;
+  --muted: #5B6085;
+  --line: #DADDEB;
+  --blue: #2B3FA3;
+  --blue-soft: #E4E8F8;
+  --saffron: #E9A21F;
+  --saffron-light: #FDF5E7;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0F1226;
+  --surface: #171B3A;
+  --ink: #EEF0FB;
+  --muted: #A3A9D1;
+  --line: #2A2F5C;
+  --blue: #7E92F2;
+  --blue-soft: #1F2552;
+  --saffron: #F2B33D;
+  --saffron-light: #332711;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Custom focus ring with Saffron accent */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--saffron);
+  outline-offset: 2px;
+}
+
+.reading-width {
+  max-width: 75ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

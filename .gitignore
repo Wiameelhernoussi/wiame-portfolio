@@ -1,0 +1,35 @@
+# Dependencies
+frontend/node_modules/
+backend/venv/
+backend/env/
+backend/__pycache__/
+*/__pycache__/
+*.pyc
+
+# Production Builds
+frontend/dist/
+frontend/.vite/
+
+# Environment and secrets
+.env
+*.env
+frontend/.env.local
+frontend/.env.*.local
+!frontend/.env.example
+!.env.example
+
+# Local SQLite Database & Uploads
+portfolio.db
+*.sqlite3
+uploads/
+!uploads/.gitkeep
+
+# Testing and Cache
+.pytest_cache/
+backups/
+
+# System and IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: wiame_portfolio_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-wiame}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wiame_secure_pass_2027}
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio_wiame}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wiame -d portfolio_wiame"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wiame_portfolio_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://wiame:wiame_secure_pass_2027@db:5432/portfolio_wiame
+      SECRET_KEY: ${SECRET_KEY:-b587d609204043b2f90117ffbe478e7f1eac1b88e2bb617a94f6f1c4df976ee4}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@wiameelhernoussi.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMeNow123!}
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-local}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-}
+      CORS_ORIGINS: '["http://localhost", "http://localhost:80", "http://localhost:3000"]'
+    volumes:
+      - uploads_data:/app/uploads
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: wiame_portfolio_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
+  uploads_data:

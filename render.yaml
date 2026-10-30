@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: wiame-portfolio-api
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python backend/seed.py && uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.2
+      - key: DATABASE_URL
+        fromDatabase:
+          name: wiame-portfolio-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: STORAGE_PROVIDER
+        value: cloudinary
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: FIRST_SUPERUSER_EMAIL
+        value: admin@wiameelhernoussi.com
+      - key: FIRST_SUPERUSER_PASSWORD
+        value: ChangeMeNow123!
+
+databases:
+  - name: wiame-portfolio-db
+    databaseName: portfolio_wiame
+    user: wiame
+    plan: free

@@ -6,12 +6,10 @@ import { ProgressBar } from "./components/common/ProgressBar";
 import { Navbar } from "./components/common/Navbar";
 import { Footer } from "./components/common/Footer";
 import { NotFoundPage } from "./pages/public/NotFoundPage";
+import HomePage from "./pages/public/HomePage";
+import ProjectDetailPage from "./pages/public/ProjectDetailPage";
 
-// Public pages (lazy loaded)
-const HomePage = lazy(() => import("./pages/public/HomePage").then(m => ({ default: m.HomePage })));
-const ProjectDetailPage = lazy(() => import("./pages/public/ProjectDetailPage").then(m => ({ default: m.ProjectDetailPage })));
-
-// Admin pages
+// Admin pages (lazy loaded)
 const LoginPage = lazy(() => import("./pages/admin/LoginPage").then(m => ({ default: m.LoginPage })));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout").then(m => ({ default: m.AdminLayout })));
 const DashboardPage = lazy(() => import("./pages/admin/DashboardPage").then(m => ({ default: m.DashboardPage })));
@@ -38,9 +36,7 @@ const PublicLayout: React.FC = () => {
       <ProgressBar />
       <Navbar />
       <main className="flex-grow pt-20">
-        <Suspense fallback={<LoadingSpinner />}>
-          <Outlet />
-        </Suspense>
+        <Outlet />
       </main>
       <Footer />
     </div>
